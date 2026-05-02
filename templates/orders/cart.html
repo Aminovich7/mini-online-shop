@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Savat{% endblock %}
+
+{% block content %}
+    <section class="panel">
+        <div class="section-head">
+            <div>
+                <span class="section-tag">Savat</span>
+                <h1>Tanlangan mahsulotlar</h1>
+            </div>
+            <span class="meta-pill">{{ card.total_quantity }} ta mahsulot</span>
+        </div>
+
+        {% if items %}
+            <div class="cart-list">
+                {% for item in items %}
+                    <article class="cart-card">
+                        <div class="cart-card__info">
+                            <h2><a href="{% url 'products:detail' item.product.pk %}">{{ item.product.title }}</a></h2>
+                            <p>{{ item.product.description|truncatechars:120 }}</p>
+                            <div class="meta-row">
+                                <span>Miqdor: {{ item.quantity }}</span>
+                                <span>Birlik narxi: ${{ item.product.discounted_price|floatformat:2 }}</span>
+                            </div>
+                        </div>
+                        <div class="cart-card__actions">
+                            <strong>${{ item.total_price|floatformat:2 }}</strong>
+                            <form method="post" action="{% url 'orders:remove_from_cart' item.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="button button--ghost">Olib tashlash</button>
+                            </form>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+
+            <div class="cart-summary">
+                <div>
+                    <span class="meta-label">Jami summa</span>
+                    <strong>${{ card.subtotal|floatformat:2 }}</strong>
+                </div>
+                <a class="button" href="{% url 'products:home' %}">Xaridni davom ettirish</a>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>Savatingiz hozircha bo'sh.</h3>
+                <p>Mahsulot sahifasiga o'tib, savatga qo'shish tugmasidan foydalaning.</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

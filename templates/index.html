@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Mini Do'kon | Katalog{% endblock %}
+
+{% block content %}
+    <section class="hero">
+        <div class="hero-copy">
+            <span class="section-tag">Professional mini internet do'koni</span>
+            <h1>Mahsulotlarni qulay ko'rish va xarid qilish uchun ixcham savdo maydoni.</h1>
+            <p>Mahsulotlarni ko'rib chiqing, tafsilotlarni o'qing, savatga qo'shing va buyurtma bering. Tizimga kirmagan foydalanuvchilar katalogni bemalol ko'rishlari mumkin.</p>
+            <div class="hero-actions">
+                <a class="button" href="#collections">Kolleksiyani ko'rish</a>
+                <a class="button button--ghost" href="{% url 'products:home' %}">Katalogni yangilash</a>
+            </div>
+        </div>
+        {% if featured_product %}
+            <div class="hero-feature">
+                <span class="section-tag">Tavsiya etilgan mahsulot</span>
+                <h2>{{ featured_product.title }}</h2>
+                <p>{{ featured_product.description|truncatechars:160 }}</p>
+                <div class="hero-feature__price">
+                    <strong>${{ featured_product.discounted_price|floatformat:2 }}</strong>
+                    {% if featured_product.has_discount %}
+                        <span>${{ featured_product.price|floatformat:2 }}</span>
+                    {% endif %}
+                </div>
+                <a class="text-link" href="{% url 'products:detail' featured_product.pk %}">Mahsulot sahifasini ochish</a>
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="panel panel--filter" id="collections">
+        <div>
+            <span class="section-tag">Katalog filtrlari</span>
+            <h2>Kerakli mahsulotni tezroq toping</h2>
+        </div>
+        <form method="get" class="filter-form">
+            <div class="field">
+                <label for="{{ filter_form.query.id_for_label }}">{{ filter_form.query.label }}</label>
+                {{ filter_form.query }}
+                {{ filter_form.query.errors }}
+            </div>
+            <div class="field">
+                <label for="{{ filter_form.category.id_for_label }}">{{ filter_form.category.label }}</label>
+                {{ filter_form.category }}
+                {{ filter_form.category.errors }}
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="button">Filtrni qo'llash</button>
+                <a class="button button--ghost" href="{% url 'products:home' %}">Tozalash</a>
+            </div>
+        </form>
+        <div class="collections">
+            {% for category in categories %}
+                <a class="collection-chip" href="{% url 'products:home' %}?category={{ category.pk }}">{{ category.name }}</a>
+            {% empty %}
+                <span class="collection-chip collection-chip--muted">Hozircha kategoriya yo'q</span>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="catalog-header">
+        <div>
+            <span class="section-tag">Hozir mavjud</span>
+            <h2>Katalogda {{ results_count }} ta mahsulot bor</h2>
+        </div>
+        <p>Har bir kartada kategoriya, chegirmali narx va mahsulot sahifasiga tezkor o'tish mavjud.</p>
+    </section>
+
+    <section class="product-grid">
+        {% for product in products %}
+            {% include "includes/product_card.html" %}
+        {% empty %}
+            <div class="empty-state">
+                <h3>Filtrga mos mahsulot topilmadi.</h3>
+                <p>Boshqa kalit so'zni sinab ko'ring yoki filtrlarni tozalang.</p>
+            </div>
+        {% endfor %}
+    </section>
+
+    {% if is_paginated %}
+        <nav class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Oldingi</a>
+            {% endif %}
+            <span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}-sahifa</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Keyingi</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+{% endblock %}

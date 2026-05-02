@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Buyurtma | {{ product.title }}{% endblock %}
+
+{% block content %}
+    <section class="checkout-layout">
+        <div class="panel">
+            <span class="section-tag">Buyurtma rasmiylashtirish</span>
+            <h1>Buyurtmangizni tasdiqlang</h1>
+            <p>Mahsulotni tekshirib chiqing va quyidagi forma orqali buyurtmani yuboring.</p>
+
+            <form method="post" class="stack-form">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="button">Buyurtmani yuborish</button>
+            </form>
+        </div>
+
+        <aside class="panel order-aside">
+            <span class="section-tag">Buyurtma xulosasi</span>
+            <h2>{{ product.title }}</h2>
+            <p>{{ product.description|truncatechars:150 }}</p>
+            <div class="detail-price">
+                <strong>${{ product.discounted_price|floatformat:2 }}</strong>
+                {% if product.has_discount %}
+                    <span class="old-price">${{ product.price|floatformat:2 }}</span>
+                {% endif %}
+            </div>
+            <div class="detail-meta">
+                <div>
+                    <span class="meta-label">Kategoriya</span>
+                    <strong>{{ product.category.name }}</strong>
+                </div>
+                <div>
+                    <span class="meta-label">Sotuvchi</span>
+                    <strong>{{ product.author.username }}</strong>
+                </div>
+            </div>
+        </aside>
+    </section>
+{% endblock %}

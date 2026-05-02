@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}{{ heading }} | Mini Do'kon{% endblock %}
+
+{% block content %}
+    <section class="panel">
+        <div class="section-head">
+            <div>
+                <span class="section-tag">
+                    {% if collection_type == "liked" %}Yoqtirilganlar{% else %}Saqlanganlar{% endif %}
+                </span>
+                <h1>{{ heading }}</h1>
+            </div>
+            <span class="meta-pill">{{ products|length }} ta mahsulot</span>
+        </div>
+        <p class="panel-copy">{{ description }}</p>
+
+        <section class="product-grid">
+            {% for product in products %}
+                {% include "includes/product_card.html" %}
+            {% empty %}
+                <div class="empty-state">
+                    <h3>Hozircha mahsulot yo'q.</h3>
+                    <p>Siz tanlagan bo'lim bo'sh. Katalogdan mahsulot tanlab, bu ro'yxatni to'ldiring.</p>
+                </div>
+            {% endfor %}
+        </section>
+    </section>
+{% endblock %}

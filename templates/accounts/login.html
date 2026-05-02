@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Kirish{% endblock %}
+
+{% block content %}
+    <section class="auth-shell">
+        <div class="panel auth-panel">
+            <span class="section-tag">Kirish</span>
+            <h1>Hisobingizga kiring</h1>
+            <p>Katalogni ko'rish bepul. Saqlash, layk bosish, izoh qoldirish va savat ishlatish uchun tizimga kiring.</p>
+
+            <form method="post" class="stack-form">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+                {% if request.GET.next %}
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                {% endif %}
+                <button type="submit" class="button">Kirish</button>
+            </form>
+
+            <p class="auth-meta">Hisobingiz yo'qmi? <a class="text-link" href="{% url 'accounts:register' %}">Ro'yxatdan o'ting</a></p>
+        </div>
+    </section>
+{% endblock %}

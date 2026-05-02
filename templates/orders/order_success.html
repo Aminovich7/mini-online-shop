@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Buyurtma muvaffaqiyatli yaratildi{% endblock %}
+
+{% block content %}
+    <section class="success-panel panel">
+        <span class="section-tag">Buyurtma yaratildi</span>
+        <h1>Buyurtmangiz qabul qilindi.</h1>
+        <p>Buyurtma holati: <strong>{{ order.status_label_uz }}</strong>. Quyida buyurtma tafsilotlari keltirilgan.</p>
+
+        <div class="success-grid">
+            <div>
+                <span class="meta-label">Yetkazib berish manzili</span>
+                <strong>{{ order.address }}</strong>
+            </div>
+            <div>
+                <span class="meta-label">Promo-kod</span>
+                <strong>{% if order.promo_code %}{{ order.promo_code.code }}{% else %}Ishlatilmagan{% endif %}</strong>
+            </div>
+            <div>
+                <span class="meta-label">Yakuniy summa</span>
+                <strong>${{ order.finished_price|floatformat:2 }}</strong>
+            </div>
+        </div>
+
+        <div class="order-item-list">
+            {% for item in order.items.all %}
+                <article class="order-item-card">
+                    <div>
+                        <h2>{{ item.product.title }}</h2>
+                        <p>Miqdori: {{ item.quantity }}</p>
+                    </div>
+                    <strong>${{ item.total_price|floatformat:2 }}</strong>
+                </article>
+            {% endfor %}
+        </div>
+
+        <a class="button" href="{% url 'products:home' %}">Katalogga qaytish</a>
+    </section>
+{% endblock %}

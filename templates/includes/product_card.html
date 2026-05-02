@@ -1,0 +1,30 @@
+<article class="product-card">
+    <a class="product-card__image" href="{% url 'products:detail' product.pk %}">
+        {% if product.cover_image %}
+            <img src="{{ product.cover_image.image.url }}" alt="{{ product.title }}">
+        {% else %}
+            <div class="image-placeholder">Rasm mavjud emas</div>
+        {% endif %}
+        {% if product.has_discount %}
+            <span class="badge">-{{ product.discount_percent|floatformat:0 }}%</span>
+        {% endif %}
+    </a>
+    <div class="product-card__body">
+        <div class="eyebrow">{{ product.category.name }}</div>
+        <h3><a href="{% url 'products:detail' product.pk %}">{{ product.title }}</a></h3>
+        <p>{{ product.description|truncatechars:110 }}</p>
+        <div class="meta-row">
+            <span>{{ product.comment_total|default:product.comments.count }} ta izoh</span>
+            <span>{{ product.like_total|default:product.likes.count }} ta layk</span>
+        </div>
+        <div class="price-row">
+            <div>
+                <strong>${{ product.discounted_price|floatformat:2 }}</strong>
+                {% if product.has_discount %}
+                    <span class="old-price">${{ product.price|floatformat:2 }}</span>
+                {% endif %}
+            </div>
+            <a class="button button--ghost" href="{% url 'products:detail' product.pk %}">Ko'rish</a>
+        </div>
+    </div>
+</article>

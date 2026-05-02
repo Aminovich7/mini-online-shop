@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Profilni tahrirlash{% endblock %}
+
+{% block content %}
+    <section class="auth-shell">
+        <div class="panel auth-panel">
+            <span class="section-tag">Profil</span>
+            <h1>Profil ma'lumotlarini yangilang</h1>
+            <p>Joriy rol: <strong>{{ request.user.role_name }}</strong></p>
+
+            <form method="post" enctype="multipart/form-data" class="stack-form">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="button">Saqlash</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

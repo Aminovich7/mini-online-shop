@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mini Do'kon{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+</head>
+<body>
+    <div class="site-shell">
+        <header class="site-header">
+            <div class="container nav-shell">
+                <a class="brand" href="{% url 'products:home' %}">
+                    <span class="brand-mark">MD</span>
+                    <span>
+                        <strong>Mini Do'kon</strong>
+                        <small>Kundalik ehtiyojlar uchun zamonaviy savdo maydoni</small>
+                    </span>
+                </a>
+                <div class="nav-group">
+                    <nav class="main-nav">
+                        <a href="{% url 'products:home' %}">Bosh sahifa</a>
+                        <a href="{% url 'products:home' %}#collections">Kolleksiyalar</a>
+                        <a href="{% url 'products:home' %}#contact">Aloqa</a>
+                    </nav>
+
+                    <div class="nav-side">
+                        {% if request.user.is_authenticated %}
+                            <a class="nav-chip" href="{% url 'products:liked' %}">Yoqtirilganlar ({{ request.user.liked_items_count }})</a>
+                            <a class="nav-chip" href="{% url 'products:saved' %}">Saqlanganlar ({{ request.user.saved_items_count }})</a>
+                            <a class="nav-chip" href="{% url 'orders:cart' %}">Savat ({{ request.user.cart_items_count }})</a>
+                            <div class="user-pill">
+                                <div class="user-pill__avatar">
+                                    <img src="{{ request.user.avatar.url }}" alt="{{ request.user.username }}">
+                                </div>
+                                <div class="user-pill__content">
+                                    <strong>{{ request.user.username }}</strong>
+                                    <span>{{ request.user.full_name_or_username }}</span>
+                                    <span>Roli: {{ request.user.role_name }}</span>
+                                </div>
+                            </div>
+                            <a class="nav-chip" href="{% url 'accounts:profile' %}">Profilni tahrirlash</a>
+                            <form method="post" action="{% url 'accounts:logout' %}" class="inline-form">
+                                {% csrf_token %}
+                                <button type="submit" class="nav-chip nav-chip--button">Chiqish</button>
+                            </form>
+                        {% else %}
+                            <a class="nav-chip" href="{% url 'accounts:login' %}">Kirish</a>
+                            <a class="nav-chip nav-chip--solid" href="{% url 'accounts:register' %}">Ro'yxatdan o'tish</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-shell">
+            <div class="container">
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="message {{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+
+        <footer class="site-footer" id="contact">
+            <div class="container footer-grid">
+                <div>
+                    <h3>Mini Do'kon</h3>
+                    <p>Django shablonlari, HTML va CSS yordamida yaratilgan ixcham internet do'kon.</p>
+                </div>
+                <div>
+                    <h4>Xarid</h4>
+                    <a href="{% url 'products:home' %}">Katalogni ko'rish</a>
+                    <a href="{% url 'products:home' %}#collections">Kategoriyalar</a>
+                </div>
+                <div>
+                    <h4>Yordam</h4>
+                    <p>Izoh qoldirish, mahsulot saqlash, yoqtirish va buyurtma berish uchun tizimga kiring.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
