@@ -24,3 +24,19 @@ class AuthRequiredMessageMixin(AccessMixin):
             self.get_login_url(),
             self.get_redirect_field_name(),
         )
+
+
+class SellerRequiredMixin(AuthRequiredMessageMixin):
+    permission_denied_message = "Bu amalni bajarish uchun sotuvchi hisobi kerak."
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+        if not request.user.is_seller:
+            messages.error(self.request, self.get_permission_denied_message())
+            return redirect_to_login(
+                self.request.META.get("HTTP_REFERER") or "/",
+                self.get_login_url(),
+                self.get_redirect_field_name(),
+            )
+        return super().dispatch(request, *args, **kwargs)

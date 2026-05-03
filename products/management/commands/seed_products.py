@@ -13,13 +13,20 @@ from products.models import Category, Product, ProductImage
 
 
 class Command(BaseCommand):
-    help = "Refresh sample catalog with 50 Uzbek products and real product photos."
+    help = "150 ta o'zbek mahsuloti bilan namuna katalog yaratadi."
 
-    API_URL = (
+    # Fetch 100 from page 1, 50 from page 2
+    API_URL_1 = (
         "https://dummyjson.com/products"
-        "?limit=50"
+        "?limit=100&skip=0"
         "&select=title,description,category,price,discountPercentage,brand,images,thumbnail"
     )
+    API_URL_2 = (
+        "https://dummyjson.com/products"
+        "?limit=50&skip=100"
+        "&select=title,description,category,price,discountPercentage,brand,images,thumbnail"
+    )
+
     SAMPLE_SELLERS = ["seller1", "seller2", "seller3", "seller4", "seller5"]
 
     CATEGORY_NAMES = {
@@ -31,22 +38,22 @@ class Command(BaseCommand):
         "kitchen-accessories": "Oshxona",
         "laptops": "Noutbuklar",
         "mens-shirts": "Erkak kiyim",
-        "mens-shoes": "Erkak oyoq",
+        "mens-shoes": "Erkak oyoq kiyim",
         "mens-watches": "Erkak soat",
-        "mobile-accessories": "Mobil akses",
+        "mobile-accessories": "Mobil aksessuarlar",
         "motorcycle": "Mototsikl",
-        "skin-care": "Teri parvar",
+        "skin-care": "Teri parvarishi",
         "smartphones": "Smartfonlar",
-        "sports-accessories": "Sport anjom",
+        "sports-accessories": "Sport anjomlar",
         "sunglasses": "Ko'zoynak",
         "tablets": "Planshetlar",
         "tops": "Ustki kiyim",
-        "vehicle": "Avto",
-        "womens-bags": "Ayol sumka",
-        "womens-dresses": "Ayol libos",
-        "womens-jewellery": "Taqinchoq",
-        "womens-shoes": "Ayol oyoq",
-        "womens-watches": "Ayol soat",
+        "vehicle": "Avtomobil",
+        "womens-bags": "Ayollar sumkasi",
+        "womens-dresses": "Ayollar libosi",
+        "womens-jewellery": "Taqinchoqlar",
+        "womens-shoes": "Ayollar oyoq kiyimi",
+        "womens-watches": "Ayollar soati",
     }
 
     CATEGORY_TITLE_PREFIX = {
@@ -74,59 +81,6 @@ class Command(BaseCommand):
         "womens-jewellery": "Ayollar taqinchog'i",
         "womens-shoes": "Ayollar poyabzali",
         "womens-watches": "Ayollar soati",
-    }
-
-    TITLE_TRANSLATIONS = {
-        "Essence Mascara Lash Princess": "Essence Lash Princess maskarasi",
-        "Eyeshadow Palette with Mirror": "Oynali ten palitrasi",
-        "Powder Canister": "Upa qutichasi",
-        "Red Lipstick": "Qizil lab bo'yog'i",
-        "Red Nail Polish": "Qizil tirnoq bo'yog'i",
-        "Calvin Klein CK One": "Calvin Klein CK One atiri",
-        "Chanel Coco Noir Eau De": "Chanel Coco Noir atiri",
-        "Dior J'adore": "Dior J'adore atiri",
-        "Dolce Shine Eau de": "Dolce Shine atiri",
-        "Gucci Bloom Eau de": "Gucci Bloom atiri",
-        "Annibale Colombo Bed": "Annibale Colombo karovati",
-        "Annibale Colombo Sofa": "Annibale Colombo divani",
-        "Bedside Table African Cherry": "Afrika olchasi rangidagi yotoq stolchasi",
-        "Knoll Saarinen Executive Conference Chair": "Knoll Saarinen konferensiya o'rindig'i",
-        "Wooden Bathroom Sink With Mirror": "Oynali yog'och lavabo to'plami",
-        "Apple": "Olma",
-        "Beef Steak": "Mol go'shti steyki",
-        "Cat Food": "Mushuklar uchun yem",
-        "Chicken Meat": "Tovuq go'shti",
-        "Cooking Oil": "Osh yog'i",
-        "Cucumber": "Bodring",
-        "Dog Food": "Itlar uchun yem",
-        "Eggs": "Tuxum",
-        "Fish Steak": "Baliq steyki",
-        "Green Bell Pepper": "Yashil bulg'or qalampiri",
-        "Green Chili Pepper": "Yashil achchiq qalampir",
-        "Honey Jar": "Asal bankasi",
-        "Ice Cream": "Muzqaymoq",
-        "Juice": "Sharbat",
-        "Kiwi": "Kivi",
-        "Lemon": "Limon",
-        "Milk": "Sut",
-        "Mulberry": "Tut mevasi",
-        "Nescafe Coffee": "Nescafe qahvasi",
-        "Potatoes": "Kartoshka",
-        "Protein Powder": "Protein kukuni",
-        "Red Onions": "Qizil piyoz",
-        "Rice": "Guruch",
-        "Soft Drinks": "Gazli ichimliklar",
-        "Strawberry": "Qulupnay",
-        "Tissue Paper Box": "Salfetka qutisi",
-        "Water": "Suv",
-        "Decoration Swing": "Dekorativ belanchak",
-        "Family Tree Photo Frame": "Oila daraxti foto ramkasi",
-        "House Showpiece Plant": "Uy uchun dekor o'simlik",
-        "Plant Pot": "Gul tuvagi",
-        "Table Lamp": "Stol chirog'i",
-        "Bamboo Spatula": "Bambuk spatula",
-        "Black Aluminium Cup": "Qora alyuminiy stakan",
-        "Black Whisk": "Qora ko'pirtirgich",
     }
 
     DESCRIPTION_TEMPLATES = {
@@ -162,6 +116,11 @@ class Command(BaseCommand):
         "Bunyodkor ko'chasi 27, Farg'ona",
         "Istiqlol ko'chasi 18, Andijon",
         "Shahrisabz ko'chasi 61, Buxoro",
+        "Mustaqillik ko'chasi 33, Namangan",
+        "Bog'ishamol ko'chasi 7, Toshkent",
+        "Al-Xorazmiy ko'chasi 19, Urganch",
+        "Tinchlik ko'chasi 55, Qarshi",
+        "Shota Rustaveli ko'chasi 3, Nukus",
     ]
 
     SAMPLE_PHONES = [
@@ -170,42 +129,82 @@ class Command(BaseCommand):
         "+998 90 333 44 55",
         "+998 90 444 55 66",
         "+998 90 555 66 77",
+        "+998 91 666 77 88",
+        "+998 91 777 88 99",
+        "+998 93 888 99 00",
+        "+998 94 999 00 11",
+        "+998 97 000 11 22",
     ]
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--force",
+            action="store_true",
+            help="Mavjud namuna ma'lumotlarini o'chirib, qayta yuklaydi.",
+        )
+
     def handle(self, *args, **options):
+        if options["force"]:
+            self.stdout.write(self.style.WARNING("Eski namuna ma'lumotlar o'chirilmoqda..."))
+            Product.objects.filter(author__username__in=self.SAMPLE_SELLERS).delete()
+            Category.objects.filter(product__isnull=True).delete()
+            self.stdout.write(self.style.WARNING("Eski namuna ma'lumotlar o'chirildi."))
+        elif Product.objects.filter(author__username__in=self.SAMPLE_SELLERS).exists():
+            self.stdout.write(self.style.WARNING(
+                "Namuna ma'lumotlar allaqachon mavjud. Qayta yuklash uchun --force ishlating."
+            ))
+            return
+
         sellers = self._get_or_create_sellers()
+
+        self.stdout.write("Mahsulotlar API dan yuklanmoqda...")
         product_payloads = self._fetch_products()
-        self._clear_existing_sample_data()
+        self.stdout.write(self.style.SUCCESS(f"{len(product_payloads)} ta mahsulot ma'lumoti olindi."))
+
         categories = {}
 
-        for index, payload in enumerate(product_payloads):
+        for index, payload in enumerate(product_payloads, start=1):
             seller = sellers[index % len(sellers)]
             category = self._get_or_create_category(categories, payload["category"])
             product = Product.objects.create(
                 author=seller,
                 category=category,
-                title=self._build_uzbek_title(payload),
-                description=self._build_uzbek_description(payload),
+                title=self._build_title(payload),
+                description=self._build_description(payload),
                 price=Decimal(str(payload["price"])),
                 address=self.SAMPLE_ADDRESSES[index % len(self.SAMPLE_ADDRESSES)],
                 phone_number=self.SAMPLE_PHONES[index % len(self.SAMPLE_PHONES)],
-                discount_percent=Decimal(str(payload.get("discountPercentage", 0))).quantize(Decimal("0.01")),
+                discount_percent=Decimal(
+                    str(payload.get("discountPercentage", 0))
+                ).quantize(Decimal("0.01")),
             )
             self._attach_real_images(product, payload)
+            self.stdout.write(f"  [{index}/{len(product_payloads)}] ✓ {product.title}")
 
-        total_products = Product.objects.count()
-        total_images = ProductImage.objects.count()
         self.stdout.write(
             self.style.SUCCESS(
-                f"Yangi katalog tayyorlandi. Mahsulotlar: {total_products}. Rasmlar: {total_images}."
+                f"\nKatalog tayyor! "
+                f"Jami mahsulotlar: {Product.objects.count()}. "
+                f"Jami rasmlar: {ProductImage.objects.count()}."
             )
         )
 
+    # ------------------------------------------------------------------ #
+    #  API                                                                 #
+    # ------------------------------------------------------------------ #
+
     def _fetch_products(self):
-        request = Request(self.API_URL, headers={"User-Agent": "mini-online-shop-seeder/1.0"})
-        with urlopen(request, timeout=60) as response:
-            payload = json.loads(response.read().decode("utf-8"))
-        return payload.get("products", [])
+        payloads = []
+        for url in [self.API_URL_1, self.API_URL_2]:
+            request = Request(url, headers={"User-Agent": "mini-online-shop-seeder/1.0"})
+            with urlopen(request, timeout=60) as response:
+                data = json.loads(response.read().decode("utf-8"))
+            payloads.extend(data.get("products", []))
+        return payloads[:150]
+
+    # ------------------------------------------------------------------ #
+    #  Sellers                                                             #
+    # ------------------------------------------------------------------ #
 
     def _get_or_create_sellers(self):
         sellers = []
@@ -228,34 +227,32 @@ class Command(BaseCommand):
             sellers.append(seller)
         return sellers
 
-    def _clear_existing_sample_data(self):
-        sample_images_root = Path(settings.MEDIA_ROOT) / "products"
-        if sample_images_root.exists():
-            shutil.rmtree(sample_images_root)
-        Product.objects.filter(author__username__in=self.SAMPLE_SELLERS).delete()
-        Category.objects.filter(product__isnull=True).delete()
+    # ------------------------------------------------------------------ #
+    #  Categories                                                          #
+    # ------------------------------------------------------------------ #
 
     def _get_or_create_category(self, category_cache, category_slug):
         if category_slug in category_cache:
             return category_cache[category_slug]
         category_name = self.CATEGORY_NAMES.get(category_slug, "Mahsulotlar")
-        category, _ = Category.objects.get_or_create(name=category_name[:20])
+        category, _ = Category.objects.get_or_create(name=category_name)
         category_cache[category_slug] = category
         return category
 
-    def _build_uzbek_title(self, payload):
+    # ------------------------------------------------------------------ #
+    #  Title & Description                                                 #
+    # ------------------------------------------------------------------ #
+
+    def _build_title(self, payload):
         category_slug = payload["category"]
         source_title = payload["title"]
-        translated_title = self.TITLE_TRANSLATIONS.get(source_title)
-        if translated_title:
-            return translated_title[:150]
         prefix = self.CATEGORY_TITLE_PREFIX.get(category_slug, "Mahsulot")
         brand = payload.get("brand") or ""
         if brand and brand.lower() not in source_title.lower():
             return f"{prefix}: {brand} {source_title}"[:150]
         return f"{prefix}: {source_title}"[:150]
 
-    def _build_uzbek_description(self, payload):
+    def _build_description(self, payload):
         category_slug = payload["category"]
         template = self.DESCRIPTION_TEMPLATES.get(
             category_slug,
@@ -265,11 +262,16 @@ class Command(BaseCommand):
         source_title = payload["title"]
         description = template.format(brand=brand, source_title=source_title)
         return (
-            f"{description} Ushbu katalog yozuvi o'zbek tilida moslashtirildi va mahsulot suratlari haqiqiy mahsulot fotosuratlaridan olindi."
+            f"{description} Ushbu katalog yozuvi o'zbek tilida moslashtirildi "
+            f"va mahsulot suratlari haqiqiy mahsulot fotosuratlaridan olindi."
         )
 
+    # ------------------------------------------------------------------ #
+    #  Images                                                              #
+    # ------------------------------------------------------------------ #
+
     def _attach_real_images(self, product, payload):
-        image_urls = self._pick_three_image_urls(payload)
+        image_urls = self._pick_image_urls(payload)
         product_dir = Path(settings.MEDIA_ROOT) / "products" / f"product_{product.pk}"
         product_dir.mkdir(parents=True, exist_ok=True)
 
@@ -279,19 +281,19 @@ class Command(BaseCommand):
                 extension = ".jpg"
             relative_path = f"products/product_{product.pk}/image_{index}{extension}"
             full_path = Path(settings.MEDIA_ROOT) / relative_path
-            self._download_image(image_url, full_path)
-            ProductImage.objects.create(product=product, image=relative_path)
+            try:
+                self._download_image(image_url, full_path)
+                ProductImage.objects.create(product=product, image=relative_path)
+            except Exception as e:
+                self.stdout.write(self.style.WARNING(f"    Rasm yuklanmadi ({image_url}): {e}"))
 
-    def _pick_three_image_urls(self, payload):
+    def _pick_image_urls(self, payload):
         raw_urls = list(payload.get("images") or [])
         thumbnail = payload.get("thumbnail")
-        if thumbnail:
+        if thumbnail and thumbnail not in raw_urls:
             raw_urls.append(thumbnail)
 
-        unique_urls = []
-        for url in raw_urls:
-            if url and url not in unique_urls:
-                unique_urls.append(url)
+        unique_urls = list(dict.fromkeys(url for url in raw_urls if url))
 
         if not unique_urls:
             raise ValueError(f"Mahsulot uchun rasm topilmadi: {payload['title']}")

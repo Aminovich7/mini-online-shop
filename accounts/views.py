@@ -6,7 +6,7 @@ from django.views.generic import CreateView, UpdateView
 
 from shared.mixins import AuthRequiredMessageMixin
 
-from .forms import ProfileForm, UserLoginForm, UserRegisterForm
+from .forms import ProfileForm, UserLoginForm, UserRegisterForm, SellerRegisterForm
 from .models import CustomUser
 
 
@@ -30,6 +30,19 @@ class UserRegisterView(CreateView):
         response = super().form_valid(form)
         login(self.request, self.object, backend="django.contrib.auth.backends.ModelBackend")
         messages.success(self.request, "Hisobingiz yaratildi.")
+        return response
+
+
+class SellerRegisterView(CreateView):
+    model = CustomUser
+    form_class = SellerRegisterForm
+    template_name = "accounts/seller_register.html"
+    success_url = reverse_lazy("products:home")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        login(self.request, self.object, backend="django.contrib.auth.backends.ModelBackend")
+        messages.success(self.request, "Sotuvchi hisobi yaratildi.")
         return response
 
 

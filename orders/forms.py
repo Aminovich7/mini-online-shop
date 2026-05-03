@@ -2,7 +2,7 @@ from django import forms
 
 
 class CheckoutForm(forms.Form):
-    quantity = forms.IntegerField(min_value=1, initial=1, label="Miqdor")
+    quantity = forms.IntegerField(min_value=1, initial=1, label="Miqdor", required=False)
     address = forms.CharField(
         label="Yetkazib berish manzili",
         widget=forms.Textarea(
@@ -22,3 +22,4 @@ class CheckoutForm(forms.Form):
             }
         ),
     )
+

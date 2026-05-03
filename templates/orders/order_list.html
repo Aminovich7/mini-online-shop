@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Buyurtmalarim{% endblock %}
+
+{% block content %}
+<h2>Mening buyurtmalarim</h2>
+
+{% if orders %}
+    <div class="orders-list">
+        {% for order in orders %}
+            <div class="order-card">
+                <h3>Buyurtma #{{ order.id }}</h3>
+
+                <p><strong>Holati:</strong> {{ order.status_label_uz }}</p>
+                <p><strong>Manzil:</strong> {{ order.address }}</p>
+                <p><strong>Jami:</strong> ${{ order.finished_price }}</p>
+                <p><strong>Sana:</strong> {{ order.created_at }}</p>
+
+                <!-- ITEMS INSIDE ORDER -->
+                <h4>Mahsulotlar:</h4>
+                <ul>
+                    {% for item in order.items.all %}
+                        <li>
+                            {{ item.product.title }} × {{ item.quantity }} = {{ item.total_price }}
+                        </li>
+                    {% empty %}
+                        <li>Mahsulotlar mavjud emas</li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Sizda hali buyurtmalar mavjud emas.</p>
+{% endif %}
+
+{% endblock %}

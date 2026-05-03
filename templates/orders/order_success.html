@@ -14,12 +14,18 @@
                 <strong>{{ order.address }}</strong>
             </div>
             <div>
-                <span class="meta-label">Promo-kod</span>
-                <strong>{% if order.promo_code %}{{ order.promo_code.code }}{% else %}Ishlatilmagan{% endif %}</strong>
+                <span class="meta-label">Oraliq summa</span>
+                <strong>${{ order.subtotal|floatformat:2 }}</strong>
             </div>
+            {% if order.promo_code %}
+            <div>
+                <span class="meta-label">Promo-kod ({{ order.promo_code.code }})</span>
+                <strong style="color: #28a745;">- ${{ order.discount_amount|floatformat:2 }} ({{ order.promo_code.discount_percent }}%)</strong>
+            </div>
+            {% endif %}
             <div>
                 <span class="meta-label">Yakuniy summa</span>
-                <strong>${{ order.finished_price|floatformat:2 }}</strong>
+                <strong style="font-size: 1.2em; color: #28a745;">${{ order.finished_price|floatformat:2 }}</strong>
             </div>
         </div>
 

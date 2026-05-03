@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+    <section class="auth-shell">
+        <div class="panel auth-panel" style="max-width: 700px;">
+            <span class="section-tag">Mahsulot</span>
+            <h1>{{ page_title }}</h1>
+
+            <form method="post" enctype="multipart/form-data" class="stack-form">
+                {% csrf_token %}
+                
+                <!-- Main product form -->
+                {% for field in form %}
+                    <div class="field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="errors" style="color: #dc3545; margin-top: 5px;">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <!-- Images formset -->
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+                    <h3 style="margin-bottom: 20px;">Mahsulot rasmlari</h3>
+                    {{ images_formset.management_form }}
+                    
+                    <div id="images-container">
+                        {% for form_item in images_formset %}
+                            <div class="image-form" style="margin-bottom: 20px; padding: 15px; background: #f9f9f9; border-radius: 4px; border: 1px solid #eee;">
+                                {% if form_item.instance.pk %}
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Joriy rasm:</strong><br>
+                                        <img src="{{ form_item.instance.image.url }}" alt="Product image" style="max-width: 100px; max-height: 100px; border-radius: 4px;">
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="field">
+                                    {{ form_item.image }}
+                                    {% if form_item.image.errors %}
+                                        <div class="errors" style="color: #dc3545; margin-top: 5px;">
+                                            {{ form_item.image.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                {% if form_item.instance.pk %}
+                                    <div class="field" style="margin-top: 10px;">
+                                        {{ form_item.DELETE }}
+                                        <label for="{{ form_item.DELETE.id_for_label }}" style="display: inline; margin-left: 5px;">O'chirish</label>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if images_formset.non_form_errors %}
+                        <div class="errors" style="color: #dc3545; margin-bottom: 15px;">
+                            {{ images_formset.non_form_errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div style="margin-top: 30px; display: flex; gap: 10px;">
+                    <button type="submit" class="button">{{ button_text }}</button>
+                    <a href="{% url 'products:seller_products' %}" class="button" style="background-color: #6c757d; text-align: center; text-decoration: none;">Bekor qilish</a>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <style>
+        .image-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .image-form input[type="file"] {
+            display: block;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 14px;
+        }
+    </style>
+{% endblock %}
+

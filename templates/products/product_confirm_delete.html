@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Mahsulotni o'chirish{% endblock %}
+
+{% block content %}
+    <section class="auth-shell">
+        <div class="panel auth-panel" style="max-width: 500px;">
+            <span class="section-tag">O'chirish</span>
+            <h1>Mahsulotni o'chirmoqchisiz?</h1>
+            <p>Bu amalni qaytarish mumkin emas. "{{ object.title }}" mahsuloti hamishaga o'chiriladi.</p>
+
+            <form method="post" class="stack-form">
+                {% csrf_token %}
+                <button type="submit" class="button" style="background-color: #dc3545;">Ha, o'chirish</button>
+                <a href="{% url 'products:seller_products' %}" class="button" style="background-color: #6c757d; text-align: center; text-decoration: none;">Bekor qilish</a>
+            </form>
+        </div>
+    </section>
+{% endblock %}

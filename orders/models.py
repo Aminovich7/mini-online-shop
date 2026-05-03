@@ -73,11 +73,21 @@ class Order(BaseModel):
 
 
 
+    @property
+    def subtotal(self):
+        return sum((item.total_price for item in self.items.all()), Decimal("0.00"))
+
+    @property
+    def discount_amount(self):
+        if self.promo_code:
+            return self.subtotal * Decimal(self.promo_code.discount_percent) / Decimal(100)
+        return Decimal("0.00")
+
     def calculate_total(self):
-        total = sum(item.total_price for item in self.items.all())
+        total = self.subtotal
 
         if self.promo_code and self.promo_code.active:
-            total = total * (Decimal(100) - self.promo_code.discount_percent) / Decimal(100)
+            total = total - self.discount_amount
 
         self.finished_price = total
         self.save()

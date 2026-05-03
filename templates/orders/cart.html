@@ -15,32 +15,85 @@
         {% if items %}
             <div class="cart-list">
                 {% for item in items %}
-                    <article class="cart-card">
-                        <div class="cart-card__info">
-                            <h2><a href="{% url 'products:detail' item.product.pk %}">{{ item.product.title }}</a></h2>
-                            <p>{{ item.product.description|truncatechars:120 }}</p>
-                            <div class="meta-row">
-                                <span>Miqdor: {{ item.quantity }}</span>
-                                <span>Birlik narxi: ${{ item.product.discounted_price|floatformat:2 }}</span>
+                    {% if item.product %}
+                        <article class="cart-card">
+                            <div class="cart-card__info">
+                                <h2><a href="{% url 'products:detail' item.product.pk %}">{{ item.product.title }}</a></h2>
+                                <p>{{ item.product.description|truncatechars:120 }}</p>
+                                <div class="meta-row">
+                                    <span>Birlik narxi: ${{ item.product.discounted_price|floatformat:2 }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="cart-card__actions">
-                            <strong>${{ item.total_price|floatformat:2 }}</strong>
-                            <form method="post" action="{% url 'orders:remove_from_cart' item.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="button button--ghost">Olib tashlash</button>
-                            </form>
-                        </div>
-                    </article>
+                            <div class="cart-card__actions">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <form method="post" action="{% url 'orders:update_cart_item' item.pk %}" style="display: flex; align-items: center; gap: 5px;">
+                                        {% csrf_token %}
+                                        <button type="submit" name="action" value="decrease" class="button button--ghost" style="padding: 5px 10px;">−</button>
+                                        <span style="min-width: 40px; text-align: center;">{{ item.quantity }}</span>
+                                        <button type="submit" name="action" value="increase" class="button button--ghost" style="padding: 5px 10px;">+</button>
+                                    </form>
+                                </div>
+                                <div style="text-align: right;">
+                                    <strong style="display: block; font-size: 18px;">${{ item.total_price|floatformat:2 }}</strong>
+                                    <small style="color: #666;">{{ item.quantity }} × ${{ item.product.discounted_price|floatformat:2 }}</small>
+                                </div>
+                                <form method="post" action="{% url 'orders:remove_from_cart' item.pk %}" style="margin-left: auto;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button button--ghost">Olib tashlash</button>
+                                </form>
+                            </div>
+                        </article>
+                    {% else %}
+                        <article class="cart-card" style="opacity: 0.6;">
+                            <div class="cart-card__info">
+                                <h2 style="color: #999;">Mahsulot o'chirilgan</h2>
+                                <p style="color: #999;">Bu mahsulot katalogdan o'chirilgan.</p>
+                            </div>
+                            <div class="cart-card__actions">
+                                <form method="post" action="{% url 'orders:remove_from_cart' item.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button button--ghost">Olib tashlash</button>
+                                </form>
+                            </div>
+                        </article>
+                    {% endif %}
                 {% endfor %}
             </div>
 
-            <div class="cart-summary">
-                <div>
-                    <span class="meta-label">Jami summa</span>
-                    <strong>${{ card.subtotal|floatformat:2 }}</strong>
+            <div class="cart-summary" style="margin-top: 30px;">
+                <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>Oraliq summa:</span>
+                        <strong>${{ card.subtotal|floatformat:2 }}</strong>
+                    </div>
+                    
+                    {% if promo_form.applied_code %}
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #28a745;">
+                            <span>Promo-kod chegirma ({{ promo_form.applied_code }}):</span>
+                            <strong>Faol</strong>
+                        </div>
+                    {% endif %}
+                    
+                    <hr style="margin: 10px 0;">
+                    
+                    <div style="display: flex; justify-content: space-between; font-size: 18px;">
+                        <span><strong>Jami:</strong></span>
+                        <strong>${{ card.subtotal|floatformat:2 }}</strong>
+                    </div>
                 </div>
-                <a class="button" href="{% url 'products:home' %}">Xaridni davom ettirish</a>
+
+                <form method="post" action="{% url 'orders:apply_promo' %}" style="margin-bottom: 20px;">
+                    {% csrf_token %}
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" name="promo_code" placeholder="Promo-kod kiriting" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                        <button type="submit" class="button" style="padding: 10px 20px;">Qo'llash</button>
+                    </div>
+                </form>
+
+                <div style="display: flex; gap: 10px;">
+                    <a class="button" href="{% url 'orders:cart_checkout' %}" style="flex: 1; text-align: center; text-decoration: none;">Buyurtma berish</a>
+                    <a class="button button--ghost" href="{% url 'products:home' %}" style="flex: 1; text-align: center; text-decoration: none;">Xaridni davom ettirish</a>
+                </div>
             </div>
         {% else %}
             <div class="empty-state">

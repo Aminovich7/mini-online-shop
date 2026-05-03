@@ -15,14 +15,11 @@
                     <span class="brand-mark">MD</span>
                     <span>
                         <strong>Mini Do'kon</strong>
-                        <small>Kundalik ehtiyojlar uchun zamonaviy savdo maydoni</small>
+                        <small>Online savdo platformasi</small>
                     </span>
                 </a>
                 <div class="nav-group">
                     <nav class="main-nav">
-                        <a href="{% url 'products:home' %}">Bosh sahifa</a>
-                        <a href="{% url 'products:home' %}#collections">Kolleksiyalar</a>
-                        <a href="{% url 'products:home' %}#contact">Aloqa</a>
                     </nav>
 
                     <div class="nav-side">
@@ -30,6 +27,10 @@
                             <a class="nav-chip" href="{% url 'products:liked' %}">Yoqtirilganlar ({{ request.user.liked_items_count }})</a>
                             <a class="nav-chip" href="{% url 'products:saved' %}">Saqlanganlar ({{ request.user.saved_items_count }})</a>
                             <a class="nav-chip" href="{% url 'orders:cart' %}">Savat ({{ request.user.cart_items_count }})</a>
+                            <a class="nav-chip" href="{% url 'orders:order_list' %}">Buyurtmalar</a>
+                            {% if request.user.is_seller %}
+                                <a class="nav-chip" href="{% url 'products:seller_products' %}">Mening mahsulotlarim</a>
+                            {% endif %}
                             <div class="user-pill">
                                 <div class="user-pill__avatar">
                                     <img src="{{ request.user.avatar.url }}" alt="{{ request.user.username }}">
